@@ -88,6 +88,25 @@ def remove_files(mydir):
     for f in os.listdir(mydir):
         os.remove(os.path.join(mydir, f))
 
+def create_dir(dir):
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+
+def handle_results_dir():
+    # Declare the paths for the results directory.
+    results_path = '../results/'
+    smile_path = '../results/smiling/'
+    no_smile_path = '../results/not_smiling/'
+
+    # Create directories in case they don't already exist.
+    create_dir(results_path)
+    create_dir(smile_path)
+    create_dir(no_smile_path)
+
+    # Clear the smiling and not_smiling directories in 'results' folder.
+    remove_files(smile_path)
+    remove_files(no_smile_path)
+
 def main():
     # Load the saved model.
     model = tf.keras.models.load_model('../model/smile-model.h5')
@@ -97,11 +116,8 @@ def main():
     loop2 = True
 
     while loop1 == True:
-        # Clear the smiling and not_smiling directories in 'results' folder.
-        smile_path = '../results/smiling/'
-        no_smile_path = '../results/not_smiling/'
-        remove_files(smile_path)
-        remove_files(no_smile_path)
+        # Ensure the 'results' directory is handled in the beginning of each iteration.
+        handle_results_dir()
 
         # Receive the input image from the user.
         user_img = retrieve_user_image()
