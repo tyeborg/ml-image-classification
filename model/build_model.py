@@ -14,14 +14,21 @@ def data_extractor(path,height=32,width=32):
     labels = []
     imagepaths = list(paths.list_images(path))
     for imagepath in imagepaths:
+        # Read the image.
         image = cv.imread(imagepath)
+        # Scale the image to the ideal size and dimension (preprocessing).
         image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
         image = cv.resize(image,(height,width),interpolation=cv.INTER_AREA)
+        # Convert the image to an array.
         image = img_to_array(image)
+
+        # Determine the label of the current image.
         label = imagepath.split(os.sep)[-2]
         label = int(label)
         labels.append(label)
         data.append(image)
+
+    # Return a the image data along with each images' label. 
     return np.array(data,dtype='float')/255.0,np.array(labels)
 
 def build():
