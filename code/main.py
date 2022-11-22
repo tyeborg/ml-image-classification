@@ -1,4 +1,8 @@
+# pip install tabulate
+from tabulate import tabulate
+
 import os
+from os import walk
 import numpy as np 
 import pandas as pd
 import cv2 as cv
@@ -8,12 +12,52 @@ import tensorflow as tf
 # Import classes.
 from face_detector import FaceDetector
 
+def list_test_images(path):
+    # Declare a list to store all test file names.
+    files = []
+    for (dirpath, dirnames, filenames) in walk(path):
+        # Add test file names into the 'files' list.
+        files.append(filenames)
+
+    # Convert the 'files' list into an numpyarray.
+    files = np.array(files)
+    # Reduce the dimensionality of the vector.
+    files.flatten()
+
+    # Declare another list to store the test file names into.
+    files2 = []
+
+    # Iterate through the numpy files array.
+    for i in files:
+        # Iterate through its nested vector.
+        for j in i:
+            # Re-initialize an array upon each iteration (empty in the beginning of every iteration).
+            individualize = []
+            # Add the filename into the 'individualize' list.
+            individualize.append(j)
+            # Add array into the 'files2' array.
+            files2.append(individualize)
+
+    # Specify the header which will also be displayed for the user.
+    header = ['Images To Choose From']
+
+    # Display the filenames and header in a tabular format.
+    tabular_data = tabularize_list(files2, header)
+    print(f'\n{tabular_data}')
+
+def tabularize_list(lst, header):
+    # Utilize the tabulate package to display lists in a fancy manner.
+    return tabulate(lst, headers=header, showindex=False, tablefmt="fancy_grid", stralign="center")
+    
 def retrieve_user_image():
     base_path = '../test/'
     # Declare boolean variable for validation purposes.
     invalid = True
 
     while invalid == True:
+        # Display the filenames for the user to choose from.
+        list_test_images(base_path)
+
         # Ask the user for the image file.
         input_img = input("\nPlease enter image file ('q' to exit): ")
 
